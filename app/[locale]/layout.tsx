@@ -35,7 +35,7 @@ import { JSONLD, ROOTKEYWORDS } from "@/lib/seo";
 import { BASE_URL, GOOGLE_SC_VERIFICATION, LOCALES } from "@/lib/variables";
 
 export const metadata: Metadata = {
-    title: "Invoify | Free Invoice Generator",
+    title: "Invoice Generator | Stellar Invoice Generator",
     description:
         "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
     icons: [{ rel: "icon", url: Favicon.src }],
@@ -49,8 +49,8 @@ export const metadata: Metadata = {
         canonical: BASE_URL,
     },
     authors: {
-        name: "Ali Abbasov",
-        url: "https://aliabb.vercel.app",
+        name: "Bastian Koh",
+        url: "https://telluscoop.com",
     },
     verification: {
         google: GOOGLE_SC_VERIFICATION,
@@ -92,12 +92,9 @@ export default async function LocaleLayout({
                     <Providers>
                         <BaseNavbar />
 
-                        <div className="min-h-screen flex flex-col">
-                            <main className="flex-grow">
-                                {children}
-                            </main>
-                            <BaseFooter />
-                        </div>
+                        <div className="flex flex-col">{children}</div>
+
+                        <BaseFooter />
 
                         {/* Toast component */}
                         <Toaster />
