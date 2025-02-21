@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Helpers
-import { formatNumberWithCommas } from "@/lib/helpers";
+import { formatNumberWithCommas, isValidStellarPublicKey } from "@/lib/helpers";
 
 // Variables
 import { DATE_OPTIONS } from "@/lib/variables";
@@ -115,11 +115,27 @@ const ItemSchema = z.object({
     total: fieldValidators.stringToNumber,
 });
 
-const PaymentInformationSchema = z.object({
-    bankName: fieldValidators.stringMin1,
-    accountName: fieldValidators.stringMin1,
-    accountNumber: fieldValidators.stringMin1,
-});
+const PaymentInformationSchema = z.discriminatedUnion('paymentType', [
+    z.object({
+        paymentType: z.literal('bankTransfer'),
+        bankName: fieldValidators.stringMin1,
+        accountName: fieldValidators.stringMin1,
+        accountNumber: fieldValidators.stringMin1,
+    }),
+    z.object({
+        paymentType: z.literal('stellar'),
+        publicKey: z.string()
+            .min(1, { message: "Public key is required" })
+            .refine(
+                (val) => isValidStellarPublicKey(val),
+                {
+                    message: "Invalid Stellar public key. Must be 56 characters long, start with 'G', and contain only alphanumeric characters."
+                }
+            ),
+        memo: fieldValidators.stringOptional,
+        currency: z.enum(['XLM', 'USDC']),
+    })
+]);
 
 const DiscountDetailsSchema = z.object({
     amount: fieldValidators.stringToNumberWithMax,

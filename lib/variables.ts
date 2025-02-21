@@ -161,6 +161,7 @@ export const FORM_DEFAULT_VALUES = {
             costType: "amount",
         },
         paymentInformation: {
+            paymentType: "bankTransfer",
             bankName: "",
             accountName: "",
             accountNumber: "",

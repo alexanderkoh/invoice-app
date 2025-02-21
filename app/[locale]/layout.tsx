@@ -92,9 +92,12 @@ export default async function LocaleLayout({
                     <Providers>
                         <BaseNavbar />
 
-                        <div className="flex flex-col">{children}</div>
-
-                        <BaseFooter />
+                        <div className="min-h-screen flex flex-col">
+                            <main className="flex-grow">
+                                {children}
+                            </main>
+                            <BaseFooter />
+                        </div>
 
                         {/* Toast component */}
                         <Toaster />

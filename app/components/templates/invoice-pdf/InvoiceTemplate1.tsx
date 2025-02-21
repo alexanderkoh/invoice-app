@@ -246,17 +246,36 @@ const InvoiceTemplate = (data: InvoiceType) => {
                     <div className="my-2">
                         <span className="font-semibold text-md text-gray-800">
                             Please send the payment to this address
-                            <p className="text-sm">
-                                Bank: {details.paymentInformation?.bankName}
-                            </p>
-                            <p className="text-sm">
-                                Account name:{" "}
-                                {details.paymentInformation?.accountName}
-                            </p>
-                            <p className="text-sm">
-                                Account no:{" "}
-                                {details.paymentInformation?.accountNumber}
-                            </p>
+                            {details.paymentInformation?.paymentType === 'bankTransfer' ? (
+                                <>
+                                    <p className="text-sm">
+                                        Bank: {details.paymentInformation?.bankName}
+                                    </p>
+                                    <p className="text-sm">
+                                        Account name: {details.paymentInformation?.accountName}
+                                    </p>
+                                    <p className="text-sm">
+                                        Account no: {details.paymentInformation?.accountNumber}
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="text-sm">
+                                        Network: Stellar
+                                    </p>
+                                    <p className="text-sm">
+                                        Public Key: {details.paymentInformation?.publicKey}
+                                    </p>
+                                    {details.paymentInformation?.memo && (
+                                        <p className="text-sm">
+                                            Memo: {details.paymentInformation.memo}
+                                        </p>
+                                    )}
+                                    <p className="text-sm">
+                                        Currency: {details.paymentInformation?.currency}
+                                    </p>
+                                </>
+                            )}
                         </span>
                     </div>
                 </div>

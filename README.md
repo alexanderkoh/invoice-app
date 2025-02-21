@@ -1,4 +1,4 @@
-[![Discord](https://img.shields.io/badge/Discord-%40Invoify-000000?style=flat&logo=Discord&logoColor=#5865F2)](https://discord.gg/BzT6g4Wj)
+[![Discord](https://img.shields.io/badge/Discord-%40Invoify-000000?style=flat&logo=Discord&logoColor=#5865F2)](https://discord.gg/ysuxyKJ34c)
 # Invoify
 
 Invoify is a web-based invoice generator application built with Next.js 13, TypeScript, React, and the Shadcn UI library. It provides an easy way to create and manage professional invoices.
@@ -53,10 +53,7 @@ Invoify is a web-based invoice generator application built with Next.js 13, Type
 
 ## Demo
 
-> [!NOTE]
-> Please be advised that there are currently issues when using this application in the Mozilla Firefox browser. For more information, refer to [Issue #11](https://github.com/aliabb01/invoify/issues/11).
-
-Visit the [live demo](https://invoify.vercel.app) to see Invoify in action.
+Visit the [live demo](https://invoice.bastiankoh.com) to see Invoify in action.
 
 ## Getting Started
 
@@ -71,8 +68,8 @@ Follow these instructions to get Invoify up and running on your local machine.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/al1abb/invoify.git
-   cd invoify
+   git clone https://github.com/bastiankoh/invoice-app.git
+   cd invoice-app
    ```
 2. Install dependencies
    
@@ -90,10 +87,11 @@ Follow these instructions to get Invoify up and running on your local machine.
     npm run dev
     ```
 5. Open your web browser and access the application at [http://localhost:3000](http://localhost:3000)
-<!-- LICENSE -->
+
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Copyright (c) 2024 Bastian's Creative Studio, LLC. Distributed under the MIT License. See `LICENSE` for more information.
 
-## Discord
-Join the Discord server [here](https://discord.gg/BzT6g4Wj)
+## Community
+
+Join our Discord community [here](https://discord.gg/ysuxyKJ34c)

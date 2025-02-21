@@ -202,6 +202,32 @@ const fileToBuffer = async (file: File) => {
     return pdfBuffer;
 };
 
+/**
+ * Basic validation for Stellar public key
+ * @param {string} publicKey - The Stellar public key to validate
+ * @returns {boolean} - Whether the key is valid
+ */
+export const isValidStellarPublicKey = (publicKey: string): boolean => {
+    // Check if the key is exactly 56 characters
+    if (publicKey.length !== 56) {
+        return false;
+    }
+
+    // Check if it starts with 'G'
+    if (!publicKey.startsWith('G')) {
+        return false;
+    }
+
+    // Check if remaining characters are alphanumeric
+    const remainingChars = publicKey.slice(1);
+    const alphanumericRegex = /^[A-Za-z0-9]+$/;
+    if (!alphanumericRegex.test(remainingChars)) {
+        return false;
+    }
+
+    return true;
+};
+
 export {
     formatNumberWithCommas,
     formatPriceToString,

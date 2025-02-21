@@ -27,67 +27,66 @@ const InvoiceActions = () => {
     const { invoicePdfLoading } = useInvoiceContext();
 
     return (
-        <div className={`xl:w-[45%]`}>
-            <Card className="h-auto sticky top-0 px-2">
-                <CardHeader>
-                    <CardTitle>ACTIONS</CardTitle>
+        <div className="h-full flex flex-col">
+            <Card className="flex-1">
+                <CardHeader className="pb-4">
+                    <CardTitle className="uppercase">ACTIONS</CardTitle>
                     <CardDescription>Operations and preview</CardDescription>
                 </CardHeader>
 
-                <div className="flex flex-col flex-wrap items-center gap-2">
-                    <div className="flex flex-wrap gap-3">
-                        {/* Load modal button */}
+                <div className="flex flex-col gap-4 p-4">
+                    <div className="grid grid-cols-2 gap-3">
                         <InvoiceLoaderModal>
                             <BaseButton
                                 variant="outline"
                                 tooltipLabel="Open load invoice menu"
                                 disabled={invoicePdfLoading}
+                                className="w-full"
                             >
-                                <FolderUp />
-                                Load Invoice
+                                <FolderUp className="w-4 h-4 mr-2" />
+                                <span>Load Invoice</span>
                             </BaseButton>
                         </InvoiceLoaderModal>
 
-                        {/* Export modal button */}
                         <InvoiceExportModal>
                             <BaseButton
                                 variant="outline"
                                 tooltipLabel="Open load invoice menu"
                                 disabled={invoicePdfLoading}
+                                className="w-full"
                             >
-                                <Import />
-                                Export Invoice
+                                <Import className="w-4 h-4 mr-2" />
+                                <span>Export Invoice</span>
                             </BaseButton>
                         </InvoiceExportModal>
                     </div>
 
-                    <div className="flex flex-wrap gap-3">
-                        {/* New invoice button */}
+                    <div className="grid grid-cols-2 gap-3">
                         <NewInvoiceAlert>
                             <BaseButton
                                 variant="outline"
                                 tooltipLabel="Get a new invoice form"
                                 disabled={invoicePdfLoading}
+                                className="w-full"
                             >
-                                <Plus />
-                                New Invoice
+                                <Plus className="w-4 h-4 mr-2" />
+                                <span>New Invoice</span>
                             </BaseButton>
                         </NewInvoiceAlert>
 
-                        {/* Generate pdf button */}
                         <BaseButton
                             type="submit"
                             tooltipLabel="Generate your invoice"
                             loading={invoicePdfLoading}
-                            loadingText="Generating your invoice"
+                            loadingText="Generating..."
+                            className="w-full"
                         >
-                            <FileInput />
-                            Generate PDF
+                            <FileInput className="w-4 h-4 mr-2" />
+                            <span>Generate PDF</span>
                         </BaseButton>
                     </div>
 
-                    <div className="w-full">
-                        {/* Live preview and Final pdf */}
+                    <div className="flex-1 min-h-[calc(100vh-20rem)] lg:min-h-[calc(100vh-15rem)]">
                         <PdfViewer />
                     </div>
                 </div>

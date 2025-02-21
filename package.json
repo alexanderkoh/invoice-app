@@ -1,7 +1,13 @@
 {
-    "name": "invoify",
+    "name": "invoice-generator",
     "version": "0.1.0",
     "private": true,
+    "author": {
+        "name": "Bastian's Creative Studio, LLC",
+        "email": "hi@bastiankoh.com",
+        "url": "https://bastiankoh.com"
+    },
+    "license": "MIT",
     "scripts": {
         "dev": "next dev",
         "build": "next build",
