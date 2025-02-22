@@ -25,6 +25,8 @@ export async function generatePdfService(req: NextRequest) {
     let browser;
 
     try {
+        // Initialize chromium
+        await chromium.font('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
         const puppeteer = await import("puppeteer-core");
         
         browser = await puppeteer.launch({
@@ -34,8 +36,23 @@ export async function generatePdfService(req: NextRequest) {
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-gpu',
+                '--single-process',
+                '--no-zygote',
+                '--no-first-run',
+                '--disable-extensions',
+                '--disable-audio-output',
+                '--memory-pressure-off',
+                '--disable-default-apps',
+                '--js-flags="--max-old-space-size=512"'
             ],
-            defaultViewport: chromium.defaultViewport,
+            defaultViewport: {
+                width: 1200,
+                height: 1800,
+                deviceScaleFactor: 1,
+                isMobile: false,
+                hasTouch: false,
+                isLandscape: false
+            },
             executablePath: await chromium.executablePath(),
             headless: true,
             ignoreHTTPSErrors: true,
@@ -43,24 +60,45 @@ export async function generatePdfService(req: NextRequest) {
 
         const page = await browser.newPage();
         
-        // Your existing PDF generation code...
+        // Set low memory limits
+        await page.setRequestInterception(true);
+        page.on('request', (request) => {
+            if (['image', 'stylesheet', 'font'].includes(request.resourceType())) {
+                request.continue();
+            } else {
+                request.abort();
+            }
+        });
+
+        // Generate HTML content
         const ReactDOMServer = (await import("react-dom/server")).default;
         const InvoiceTemplate = await getInvoiceTemplate(body.details.pdfTemplate);
+        
+        if (!InvoiceTemplate) {
+            throw new Error('Failed to load invoice template');
+        }
+
         const htmlTemplate = ReactDOMServer.renderToStaticMarkup(
             InvoiceTemplate(body)
         );
 
         await page.setContent(htmlTemplate, {
-            waitUntil: "networkidle0",
+            waitUntil: ["load", "networkidle0"],
+            timeout: 10000 // 10 second timeout
         });
 
         await page.addStyleTag({
-            url: "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css",
+            url: TAILWIND_CDN
         });
+
+        // Small delay using setTimeout instead of waitForTimeout
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         const pdf = await page.pdf({
             format: "a4",
             printBackground: true,
+            preferCSSPageSize: true,
+            margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' }
         });
 
         await browser.close();
@@ -71,11 +109,22 @@ export async function generatePdfService(req: NextRequest) {
                 "Content-Disposition": 'inline; filename="invoice.pdf"',
             },
         });
-    } catch (error) {
+    } catch (error: any) {
+        console.error("PDF Generation Error Details:", {
+            error: error?.message || 'Unknown error',
+            stack: error?.stack,
+            memory: process.memoryUsage()
+        });
+        
         if (browser) {
             await browser.close();
         }
-        console.error("PDF Generation Error:", error);
-        return new NextResponse(`Error generating PDF: ${error}`, { status: 500 });
+        
+        return new NextResponse(`Error generating PDF: ${error?.message || 'Unknown error'}`, { 
+            status: 500,
+            headers: {
+                'Content-Type': 'text/plain'
+            }
+        });
     }
 }
