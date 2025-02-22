@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'standalone',
-    experimental: {
-        serverComponentsExternalPackages: ["puppeteer-core"],
-    },
     webpack: (config) => {
         config.module.rules.push({
             test: /\.map$/,

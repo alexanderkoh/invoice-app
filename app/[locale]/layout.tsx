@@ -55,6 +55,29 @@ export const metadata: Metadata = {
     verification: {
         google: GOOGLE_SC_VERIFICATION,
     },
+    openGraph: {
+        title: "Invoice Generator | Stellar Invoice Generator",
+        description: "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
+        url: BASE_URL,
+        siteName: "Invoice Generator",
+        images: [
+            {
+                url: "/assets/img/opengraph-invoice.png",
+                width: 1200,
+                height: 630,
+                alt: "Invoice Generator Preview"
+            }
+        ],
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Invoice Generator | Stellar Invoice Generator",
+        description: "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
+        images: ["/assets/img/opengraph-invoice.png"],
+        creator: "@telluscoop"
+    }
 };
 
 export function generateStaticParams() {
