@@ -37,7 +37,7 @@ import { BASE_URL, GOOGLE_SC_VERIFICATION, LOCALES } from "@/lib/variables";
 export const metadata: Metadata = {
     title: "Invoice Generator | Stellar Invoice Generator",
     description:
-        "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
+        "Create invoices effortlessly with Tellus Cooperative Invoice Generator, the free invoice generator for Stellar Projects. Try it now!",
     icons: [{ rel: "icon", url: Favicon.src }],
     keywords: ROOTKEYWORDS,
     viewport: "width=device-width, initial-scale=1",
