@@ -25,8 +25,7 @@ export async function generatePdfService(req: NextRequest) {
     let browser;
 
     try {
-        // Initialize chromium
-        await chromium.font('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        // Initialize chromium with minimal memory usage
         const puppeteer = await import("puppeteer-core");
         
         browser = await puppeteer.launch({
@@ -38,16 +37,14 @@ export async function generatePdfService(req: NextRequest) {
                 '--disable-gpu',
                 '--single-process',
                 '--no-zygote',
-                '--no-first-run',
-                '--disable-extensions',
-                '--disable-audio-output',
-                '--memory-pressure-off',
-                '--disable-default-apps',
-                '--js-flags="--max-old-space-size=512"'
+                '--font-render-hinting=none',
+                '--disable-web-security',
+                '--disable-features=IsolateOrigins,site-per-process',
+                '--js-flags="--max-old-space-size=450"' // Keep Node heap size well under the 1024MB limit
             ],
             defaultViewport: {
-                width: 1200,
-                height: 1800,
+                width: 800, // Reduced from 1200
+                height: 1200, // Reduced from 1800
                 deviceScaleFactor: 1,
                 isMobile: false,
                 hasTouch: false,
@@ -60,17 +57,23 @@ export async function generatePdfService(req: NextRequest) {
 
         const page = await browser.newPage();
         
-        // Set low memory limits
+        // Aggressive memory optimization
         await page.setRequestInterception(true);
         page.on('request', (request) => {
-            if (['image', 'stylesheet', 'font'].includes(request.resourceType())) {
+            const resourceType = request.resourceType();
+            if (resourceType === 'stylesheet' || (resourceType === 'font' && request.url().includes('fonts.googleapis.com'))) {
                 request.continue();
             } else {
                 request.abort();
             }
         });
 
-        // Generate HTML content
+        // Clean up memory after each navigation
+        page.on('load', () => {
+            if (global.gc) global.gc();
+        });
+
+        // Generate HTML content with minimal ReactDOMServer
         const ReactDOMServer = (await import("react-dom/server")).default;
         const InvoiceTemplate = await getInvoiceTemplate(body.details.pdfTemplate);
         
@@ -82,26 +85,31 @@ export async function generatePdfService(req: NextRequest) {
             InvoiceTemplate(body)
         );
 
+        // Set content with minimal wait time
         await page.setContent(htmlTemplate, {
-            waitUntil: ["load", "networkidle0"],
-            timeout: 10000 // 10 second timeout
+            waitUntil: "networkidle0",
+            timeout: 5000 // Reduced timeout
         });
 
         await page.addStyleTag({
             url: TAILWIND_CDN
         });
 
-        // Small delay using setTimeout instead of waitForTimeout
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Minimal delay
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         const pdf = await page.pdf({
             format: "a4",
             printBackground: true,
             preferCSSPageSize: true,
-            margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' }
+            margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' },
+            scale: 0.8 // Slightly reduce scale to ensure content fits
         });
 
         await browser.close();
+
+        // Force garbage collection if available
+        if (global.gc) global.gc();
 
         return new NextResponse(pdf, {
             headers: {
@@ -119,6 +127,9 @@ export async function generatePdfService(req: NextRequest) {
         if (browser) {
             await browser.close();
         }
+        
+        // Force garbage collection if available
+        if (global.gc) global.gc();
         
         return new NextResponse(`Error generating PDF: ${error?.message || 'Unknown error'}`, { 
             status: 500,
