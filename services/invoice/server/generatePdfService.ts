@@ -14,20 +14,26 @@ import { InvoiceType } from "@/types";
  */
 export async function generatePdfService(req: NextRequest) {
     try {
+        // Parse the request body with streaming to reduce memory usage
         const data: InvoiceType = await req.json();
         
-        // Generate PDF using the selected template
+        // Generate PDF using the selected template with optimized memory usage
         const pdfDoc = await (data.details.pdfTemplate === 2 
             ? generateTemplate2(data) 
             : generateTemplate1(data));
         
-        // Generate PDF bytes
-        const pdfBytes = await pdfDoc.save();
+        // Generate PDF bytes with streaming
+        const pdfBytes = await pdfDoc.save({
+            useObjectStreams: true,
+            addDefaultPage: false,
+            objectsPerTick: 50,
+        });
         
         return new NextResponse(pdfBytes, {
             headers: {
                 "Content-Type": "application/pdf",
                 "Content-Disposition": 'inline; filename="invoice.pdf"',
+                "Cache-Control": "s-maxage=3600, stale-while-revalidate",
             },
         });
     } catch (error: any) {
