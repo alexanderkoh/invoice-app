@@ -55,14 +55,15 @@ export const metadata: Metadata = {
     verification: {
         google: GOOGLE_SC_VERIFICATION,
     },
+    metadataBase: new URL("https://p8cw84o000wcg0skw88wo0wc.coolify.hoops.finance"),
     openGraph: {
         title: "Invoice Generator | Stellar Invoice Generator",
         description: "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
-        url: BASE_URL,
+        url: "https://p8cw84o000wcg0skw88wo0wc.coolify.hoops.finance",
         siteName: "Invoice Generator",
         images: [
             {
-                url: "/assets/img/opengraph-invoice.png",
+                url: "https://opengraph.b-cdn.net/production/images/131b8a79-cc49-4248-8c77-d55b641305c5.png?token=pYpntqn9xshlqVpBFeiV2EfD9Hbcg23jWYZdH3QLvbc&height=630&width=1200&expires=33276191309",
                 width: 1200,
                 height: 630,
                 alt: "Invoice Generator Preview"
@@ -75,8 +76,9 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Invoice Generator | Stellar Invoice Generator",
         description: "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
-        images: ["/assets/img/opengraph-invoice.png"],
-        creator: "@telluscoop"
+        images: ["https://opengraph.b-cdn.net/production/images/131b8a79-cc49-4248-8c77-d55b641305c5.png?token=pYpntqn9xshlqVpBFeiV2EfD9Hbcg23jWYZdH3QLvbc&height=630&width=1200&expires=33276191309"],
+        creator: "@telluscoop",
+        site: "p8cw84o000wcg0skw88wo0wc.coolify.hoops.finance",
     }
 };
 
